@@ -13,15 +13,10 @@ module.exports = app => {
 		if (req.params.id) user.id = req.params.id
 		try {
 			existsOrError(user.name, 'Nome não informado')
-			console.log('passou etapa 1')
 			existsOrError(user.email, 'Email não informado')
-			console.log('passou etapa 2')
 			existsOrError(user.password, 'Senha não informada')
-			console.log('passou etapa 3')
 			existsOrError(user.confirmPassword, 'Confirmação de senha inválida')
-			console.log('passou etapa 4')
 			equalsOrError(user.password , user.confirmPassword, 'Senhar não conferem')
-			console.log('passou etapa 5')
 			
 			const userFromDB = await app.db('users')
 				.where({email: user.email}).first()
@@ -31,7 +26,6 @@ module.exports = app => {
 		}catch(msg){
 			return res.status(400).send(msg)
 		}
-		console.log('continuo rodando')
 		user.password = encryptPassword(user.password)
 		delete user.confirmPassword
 	
@@ -44,11 +38,10 @@ module.exports = app => {
 		} else {
 			app.db('users')
 				.insert(user)
-				.then(()=> res.status(204))
+				.then(()=> res.status(204).send())
 				.catch(error => res.status(500).send(error))
 
 		}
-		console.log('continuo rodando 2')
 
 	}
 	const get = (req,res) => {
